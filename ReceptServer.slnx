@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Api/Api.csproj" />
+  <Project Path="ApotekUI/ApotekUI.csproj" />
+  <Project Path="BLL/BLL.csproj" />
+  <Project Path="DAL/DAL.csproj" />
+  <Project Path="LægeUI/LægeUI.csproj" />
+  <Project Path="Model/Models.csproj" />
+</Solution>

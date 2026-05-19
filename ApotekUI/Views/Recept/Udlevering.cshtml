@@ -1,0 +1,62 @@
+﻿@using Models
+@model Recept
+
+@{
+    ViewData["Title"] = "Udlevering af medicin";
+}
+
+<h2>Receptdetaljer</h2>
+<p><strong>Patient CPR:</strong> @Model.PatientCpr</p>
+<p><strong>Lægehus Ydernummer:</strong> @Model.LægehusYdernummer</p>
+
+@if (TempData["Besked"] != null)
+{
+    <div class="alert alert-success">@TempData["Besked"]</div>
+}
+@if (TempData["Fejl"] != null)
+{
+    <div class="alert alert-danger">@TempData["Fejl"]</div>
+}
+
+<hr />
+<h3>Ordinationer</h3>
+<table class="table table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th>Lægemiddel</th>
+            <th>Dosis</th>
+            <th>Tilladte udleveringer</th>
+            <th>Foretagne udleveringer</th>
+            <th>Handling</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ord in Model.Ordinationer)
+        {
+            <tr>
+                <td>@ord.Lægemiddel</td>
+                <td>@ord.Dosering</td>
+                <td>@ord.AntalUdleveringer</td>
+                <td>@ord.AntalForetagneUdleveringer</td>
+                <td>
+                    @if (!ord.ErFuldtUdleveret)
+                    {
+                        <form method="post" action="/Recept/ForetagUdlevering">
+                            <input type="hidden" name="receptId" value="@Model.Id" />
+                            <input type="hidden" name="ordinationId" value="@ord.Id" />
+                            <button type="submit" class="btn btn-primary btn-sm">Udlever medicin</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-success font-weight-bold">Fuldt udleveret</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" asp-route-cprNummer="@Model.PatientCpr" class="btn btn-secondary">
+    Tilbage til søgning
+</a>

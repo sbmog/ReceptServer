@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Models.Recept>
+
+@{
+    ViewData["Title"] = "Find Recept";
+}
+
+<h2>Fremsøg Recepter</h2>
+
+<form asp-action="Index" method="get">
+    <div class="form-group">
+        <label>Patientens CPR-nummer:</label>
+        <input type="text" name="cprNummer" value="@ViewBag.LastCpr" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Søg</button>
+</form>
+
+@if (ViewBag.Fejl != null)
+{
+    <p class="text-danger">@ViewBag.Fejl</p>
+}
+
+<hr />
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Recept ID</th>
+                <th>Lægehus (Ydernummer)</th>
+                <th>Oprettet Dato</th>
+                <th>Handling</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recept in Model)
+            {
+                <tr>
+                    <td>@recept.Id</td>
+                    <td>@recept.LægehusYdernummer</td>
+                    <td>@recept.OprettetDato.ToShortDateString()</td>
+                    <td>
+                        <a href="/Recept/Udlevering/@recept.Id" class="btn btn-sm btn-success">Se ordinationer</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (Context.Request.Method == "POST")
+{
+    <p class="text-muted">Ingen aktive recepter fundet på dette CPR-nummer.</p>
+}
