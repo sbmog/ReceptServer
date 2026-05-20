@@ -39,5 +39,10 @@ namespace BLL
             ordination.AntalForetagneUdleveringer++;
             _repository.OpdaterOrdination(ordination);
         }
+
+        public Lægehus HentLægehus(string ydernummer)
+        {
+            return _repository.HentLægehus(ydernummer);
+        }
     }
 }
