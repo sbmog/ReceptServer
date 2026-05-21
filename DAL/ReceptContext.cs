@@ -9,7 +9,6 @@ namespace DAL
     public class ReceptContext : DbContext
     {
         public DbSet<Lægehus> Lægehuse { get; set; }
-        public DbSet<Apotek> Apoteker { get; set; }
         public DbSet<Recept> Recepter { get; set; }
         public DbSet<Ordination> Ordinationer { get; set; }
 
@@ -25,13 +24,6 @@ namespace DAL
                 new Lægehus { Ydernummer = "123456", Navn = "Lægerne i Centrum", Adresse = "Torvet 1" },
                 new Lægehus { Ydernummer = "654321", Navn = "Skovvejens Lægehus", Adresse = "Skovvejen 5" },
                 new Lægehus { Ydernummer = "112233", Navn = "Vestbyens Klinik", Adresse = "Vesterbro 10" }
-            );
-
-            //Apotek
-            modelBuilder.Entity<Apotek>().HasData(
-                new Apotek { Id = 1, Navn = "Løve Apoteket", Adresse = "Hovedgaden 2" },
-                new Apotek { Id = 2, Navn = "Ørne Apoteket", Adresse = "Stationen 4" },
-                new Apotek { Id = 3, Navn = "Solsikke Apoteket", Adresse = "Torvet 2" }
             );
 
             //Recept
