@@ -5,8 +5,23 @@
     ViewData["Title"] = "Udlevering af medicin";
 }
 
+@if (TempData["Fejl"] != null)
+{
+    <div class="alert alert-danger">
+        <strong>Fejl:</strong> @TempData["Fejl"]
+    </div>
+}
+
+@if (TempData["Besked"] != null)
+{
+    <div class="alert alert-success">
+        <strong>Succes:</strong> @TempData["Besked"]
+    </div>
+}
+
 <h2>Receptdetaljer</h2>
 <p><strong>Patient CPR:</strong> @Model.PatientCpr</p>
+<p><strong>Lægehus:</strong> @Model.Lægehus?.Navn</p>
 <p><strong>Lægehus Ydernummer:</strong> @Model.LægehusYdernummer</p>
 
 @if (TempData["Besked"] != null)

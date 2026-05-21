@@ -9,15 +9,25 @@ namespace BLL
     public class ReceptManager
     {
         private readonly ReceptRepository _repository;
-        
+
         public ReceptManager()
         {
             _repository = new ReceptRepository();
         }
-        
+
         public List<Recept> HentRecepterPåCpr(string cpr)
         {
-            return _repository.HentRecepterPåCpr(cpr);
+            var recepter = _repository.HentRecepterPåCpr(cpr);
+            foreach (var recept in recepter)
+            {
+                if (!recept.ErLukket && recept.OprettetDato <= DateTime.Now.AddYears(-2))
+                {
+                    recept.ErLukket = true;
+                    _repository.OpdaterRecept(recept);
+
+                }
+            }
+            return recepter.Where(r=>!r.ErLukket).ToList();
         }
 
         public void OpretRecept(Recept nyRecept)
@@ -38,6 +48,16 @@ namespace BLL
 
             ordination.AntalForetagneUdleveringer++;
             _repository.OpdaterOrdination(ordination);
+
+            var recept = _repository.HentRecept(ordination.ReceptId);
+            if (recept != null)
+            {
+                if (recept.Ordinationer.All(o => o.ErFuldtUdleveret))
+                {
+                    recept.ErLukket = true;
+                    _repository.OpdaterRecept(recept);
+                }
+            }
         }
 
         public Lægehus HentLægehus(string ydernummer)

@@ -19,8 +19,7 @@ namespace DAL
         {
             return _context.Recepter
                 .Include(r => r.Ordinationer) //finder tilknyttet medicin
-                .Include(r => r.LægehusYdernummer) //finder tilknyttet lægehus)
-                    .ThenInclude(l => l.Navn) //finder tilknyttet læge
+                .Include(r => r.Lægehus) //finder tilknyttet lægehus)
                 .Where(r => r.PatientCpr == cpr && !r.ErLukket)
                 .ToList();
         }
@@ -35,6 +34,7 @@ namespace DAL
         {
             return _context.Recepter
                 .Include(r => r.Ordinationer)
+                .Include(r => r.Lægehus)
                 .FirstOrDefault(r => r.Id == id);
         }
 
@@ -47,6 +47,12 @@ namespace DAL
         public Lægehus? HentLægehus(string ydernummer)
         {
             return _context.Lægehuse.FirstOrDefault(l => l.Ydernummer == ydernummer);
+        }
+
+        public void OpdaterRecept(Recept recept)
+        {
+            _context.Recepter.Update(recept);
+            _context.SaveChanges();
         }
     }
 }

@@ -28,6 +28,7 @@
             <tr>
                 <th>Recept ID</th>
                 <th>Lægehus</th>
+                <th>Ydernummer</th>
                 <th>Oprettet Dato</th>
                 <th>Handling</th>
             </tr>
@@ -37,7 +38,8 @@
             {
                 <tr>
                     <td>@recept.Id</td>
-                    <td>@recept.LægehusYdernummer.Navn</td>
+                    <td>@recept.Lægehus?.Navn</td>
+                    <td>@recept.Lægehus?.Ydernummer</td>
                     <td>@recept.OprettetDato.ToShortDateString()</td>
                     <td>
                         <a href="/Recept/Udlevering/@recept.Id" class="btn btn-sm btn-success">Se ordinationer</a>
@@ -47,7 +49,7 @@
         </tbody>
     </table>
 }
-else if (Context.Request.Method == "POST")
+else if (!string.IsNullOrEmpty(ViewBag.LastCpr))
 {
     <p class="text-muted">Ingen aktive recepter fundet på dette CPR-nummer.</p>
 }
