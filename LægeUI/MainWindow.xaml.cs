@@ -1,5 +1,4 @@
 ﻿using Models;
-using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Windows;
@@ -9,9 +8,10 @@ namespace LægeUI
 {
     public partial class MainWindow : Window
     {
+        //statisk for ikke at løbe tør for netværks-sockets
         private static readonly HttpClient _httpClient = new HttpClient();
         private Lægehus? _aktueltLægehus;
-        private System.Collections.Generic.List<Ordination> _nyeOrdinationer = new System.Collections.Generic.List<Ordination>();
+        private List<Ordination> _nyeOrdinationer = new List<Ordination>();
 
         public MainWindow()
         {
@@ -38,6 +38,7 @@ namespace LægeUI
 
             try
             {
+                // Await: programmet pauser og frigiver UI-tråden, indtil API'et svarer
                 HttpResponseMessage response = await _httpClient.GetAsync($"api/lægehus/{ydernummer}");
 
                 if (response.IsSuccessStatusCode)
@@ -48,7 +49,10 @@ namespace LægeUI
                     // skifter visning fra login
                     LoginPanel.Visibility = Visibility.Collapsed;
                     ArbejdsPanel.Visibility = Visibility.Visible;
-                    VelkomstTekst.Text = $"Logget ind som: {_aktueltLægehus.Navn} ({_aktueltLægehus.Ydernummer})";
+                    if (_aktueltLægehus != null)
+                    {
+                        VelkomstTekst.Text = $"Logget ind som: {_aktueltLægehus.Navn} ({_aktueltLægehus.Ydernummer})";
+                    }
                 }
                 else
                 {
@@ -71,14 +75,12 @@ namespace LægeUI
         {
             InputFejlBesked.Text = "";
 
-            // Simpel validering
             if (string.IsNullOrWhiteSpace(MedicinInput.Text) || string.IsNullOrWhiteSpace(DosisInput.Text) || !int.TryParse(UdleveringerInput.Text, out int antal))
             {
                 InputFejlBesked.Text = "Udfyld venligst alle medicin-felter korrekt. Antal udleveringer skal være et tal.";
                 return;
             }
 
-            // Opretter en ny ordination lokalt i WPF
             var nyOrdination = new Ordination
             {
                 Lægemiddel = MedicinInput.Text,
@@ -87,12 +89,11 @@ namespace LægeUI
                 AntalForetagneUdleveringer = 0
             };
 
-            // Tilføjer til listen og opdaterer UI
             _nyeOrdinationer.Add(nyOrdination);
-            MedicinListe.ItemsSource = null; // Nulstil for at opdatere visningen
+            MedicinListe.ItemsSource = null; //nulstil for at opdatere visningen
             MedicinListe.ItemsSource = _nyeOrdinationer;
 
-            // Ryd felterne så lægen kan indtaste mere medicin
+            //ryd felterne så lægen kan indtaste mere medicin til samme recept
             MedicinInput.Clear();
             DosisInput.Clear();
             UdleveringerInput.Clear();
@@ -110,7 +111,14 @@ namespace LægeUI
                 return;
             }
 
-            // Bygger selve recepten der skal sendes til API'et
+            if (_aktueltLægehus == null)
+            {
+                OpretStatusBesked.Foreground = System.Windows.Media.Brushes.Red;
+                OpretStatusBesked.Text = "Du skal være logget ind for at oprette en recept.";
+                return;
+            }
+
+            //bygger selve recepten der skal sendes til API'et
             var nyRecept = new Recept
             {
                 PatientCpr = CprInput.Text,
@@ -122,7 +130,7 @@ namespace LægeUI
 
             try
             {
-                // Sender HTTP POST til vores API endpoint (RecepterController)
+                // PostAsJsonAsync konverterer (serialiserer) automatisk C# recept til JSON og sender det afsted til controlleren
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/recepter", nyRecept);
 
                 if (response.IsSuccessStatusCode)
@@ -130,7 +138,7 @@ namespace LægeUI
                     OpretStatusBesked.Foreground = System.Windows.Media.Brushes.Green;
                     OpretStatusBesked.Text = "Recepten er nu oprettet i databasen!";
 
-                    // Ryd alt op, så systemet er klar til næste patient
+                    // blanke felter
                     CprInput.Clear();
                     _nyeOrdinationer.Clear();
                     MedicinListe.ItemsSource = null;

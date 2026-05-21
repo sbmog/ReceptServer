@@ -9,10 +9,10 @@ namespace ApotekUI.Controllers
         private readonly ReceptManager _manager;
         public ReceptController()
         {
+            // forbinder til BLL
             _manager = new ReceptManager();
         }
 
-        //Tom søge side
         [HttpGet]
         public IActionResult Index(string cprNummer)
         {
@@ -41,6 +41,7 @@ namespace ApotekUI.Controllers
             return View(recept);
         }
 
+        //modtager data fra html form, ved klik på knap
         [HttpPost]
         public IActionResult ForetagUdlevering(int receptId, int ordinationId)
         {
@@ -51,6 +52,7 @@ namespace ApotekUI.Controllers
                 if (ordination != null)
                 {
                     _manager.ForetagUdlevering(ordination);
+                    //lever kun indtil næste request
                     TempData["Besked"] = "Udlevering foretaget.";
                 }
             }

@@ -1,10 +1,10 @@
 ﻿using BLL;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 
 namespace Api.Controllers
 {
+    //standard routing til api/recepter
     [Route("api/[controller]")]
     [ApiController]
     public class RecepterController : ControllerBase
@@ -12,6 +12,7 @@ namespace Api.Controllers
         private readonly ReceptManager _manager;
         public RecepterController()
         {
+            //forbinder til BLL
             _manager = new ReceptManager();
         }
         [HttpPost]

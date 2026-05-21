@@ -1,19 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DAL
 {
     public class ReceptContext : DbContext
     {
+        //opsæt tabeller
         public DbSet<Lægehus> Lægehuse { get; set; }
         public DbSet<Recept> Recepter { get; set; }
         public DbSet<Ordination> Ordinationer { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //forbinder til localdb og opretter DB
             optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=ReceptDB;Trusted_Connection=True;");
         }
 
@@ -28,11 +27,11 @@ namespace DAL
 
             //Recept
             modelBuilder.Entity<Recept>().HasData(
-                //Aktiv, klar til brug
+                //aktiv, klar til brug
                 new Recept { Id = 1, PatientCpr = "1212121212", LægehusYdernummer = "123456", OprettetDato = new DateTime(2026,5,1), ErLukket = false },
-                //Gammel recept, overskrevet dato, men ikke lukket. Bør lukkes, når systemet startes, og ikke vises
+                //gammel recept, overskrevet dato, men ikke lukket. Bør lukkes, når systemet startes, og ikke vises
                 new Recept { Id = 2, PatientCpr = "1212121212", LægehusYdernummer = "654321", OprettetDato = new DateTime(2023,5,5), ErLukket = false },
-                //Lukket recept (Må ikke vises i søgningen på Apoteket)
+                //lukket recept (må ikke vises i søgningen på ApotekUI)
                 new Recept { Id = 3, PatientCpr = "1122334455", LægehusYdernummer = "112233", OprettetDato = new DateTime(2025,3,1), ErLukket = true }
             );
 

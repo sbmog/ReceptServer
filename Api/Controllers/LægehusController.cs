@@ -1,9 +1,9 @@
 ﻿using BLL;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
+    //standard routing til api/lægehus
     [Route("api/[controller]")]
     [ApiController]
     public class LægehusController : ControllerBase
@@ -11,8 +11,11 @@ namespace Api.Controllers
         private readonly ReceptManager _manager;
         public LægehusController()
         {
+            //forbinder til BLL
             _manager = new ReceptManager();
         }
+
+        //GET med ydernummer som parameter
         [HttpGet("{ydernummer}")]
         public IActionResult Login(string ydernummer)
         {

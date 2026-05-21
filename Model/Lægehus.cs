@@ -5,7 +5,7 @@ namespace Models
     public class Lægehus
     {
         [Key]
-        public string? Ydernummer { get; set; }
+        public string? Ydernummer { get; set; } //PK
         public string? Navn { get; set; }
         public string? Adresse { get; set; }
         public List<Recept> Recepter { get; set; } = new List<Recept>();

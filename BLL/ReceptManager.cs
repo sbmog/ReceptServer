@@ -1,8 +1,5 @@
 ﻿using DAL;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BLL
 {
@@ -12,6 +9,7 @@ namespace BLL
 
         public ReceptManager()
         {
+            //forbinder til DAL
             _repository = new ReceptRepository();
         }
 
@@ -22,6 +20,8 @@ namespace BLL
                 throw new ArgumentException("CPR-nummer skal være præcis 10 tegn uden bindestreg.");
             }
             var recepter = _repository.HentRecepterPåCpr(cpr);
+
+            //valgfri autolukning af recept
             foreach (var recept in recepter)
             {
                 if (!recept.ErLukket && recept.OprettetDato <= DateTime.Now.AddYears(-2))
@@ -61,7 +61,7 @@ namespace BLL
 
             _repository.OpretRecept(nyRecept);
         }
-        public Recept HentRecept(int id)
+        public Recept? HentRecept(int id)
         {
             if (id <= 0)
             {
@@ -84,6 +84,7 @@ namespace BLL
             ordination.AntalForetagneUdleveringer++;
             _repository.OpdaterOrdination(ordination);
 
+            //valgfri autolukning af recept
             var recept = _repository.HentRecept(ordination.ReceptId);
             if (recept != null)
             {
@@ -95,7 +96,7 @@ namespace BLL
             }
         }
 
-        public Lægehus HentLægehus(string ydernummer)
+        public Lægehus? HentLægehus(string ydernummer)
         {
             if (string.IsNullOrWhiteSpace(ydernummer) || ydernummer.Length != 6)
             {

@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DAL
 {
@@ -12,14 +9,15 @@ namespace DAL
 
         public ReceptRepository()
         {
+            //forbindelse til DB
             _context = new ReceptContext();
         }
 
         public List<Recept> HentRecepterPåCpr(string cpr)
         {
             return _context.Recepter
-                .Include(r => r.Ordinationer) //finder tilknyttet medicin
-                .Include(r => r.Lægehus) //finder tilknyttet lægehus)
+                .Include(r => r.Ordinationer) // Eager Loading: henter Ordination og lægehuset med i samme SQL-kald (JOIN)
+                .Include(r => r.Lægehus) 
                 .Where(r => r.PatientCpr == cpr && !r.ErLukket)
                 .ToList();
         }
