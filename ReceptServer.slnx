@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="Api/Api.csproj" />
   <Project Path="ApotekUI/ApotekUI.csproj" />
+  <Project Path="BLL.Tests/BLL.Tests.csproj" Id="5280ff47-e982-4603-93f5-91d995c15038" />
   <Project Path="BLL/BLL.csproj" />
   <Project Path="DAL/DAL.csproj" />
   <Project Path="LægeUI/LægeUI.csproj" />

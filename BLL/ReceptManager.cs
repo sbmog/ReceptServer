@@ -17,6 +17,10 @@ namespace BLL
 
         public List<Recept> HentRecepterPåCpr(string cpr)
         {
+            if (string.IsNullOrWhiteSpace(cpr) || cpr.Length != 10)
+            {
+                throw new ArgumentException("CPR-nummer skal være præcis 10 tegn uden bindestreg.");
+            }
             var recepter = _repository.HentRecepterPåCpr(cpr);
             foreach (var recept in recepter)
             {
@@ -32,15 +36,46 @@ namespace BLL
 
         public void OpretRecept(Recept nyRecept)
         {
+            if (string.IsNullOrWhiteSpace(nyRecept.LægehusYdernummer) || nyRecept.LægehusYdernummer.Length != 6)
+            {
+                throw new ArgumentException("Ydernummer skal være præcis 6 tegn.");
+            }
+
+            if (nyRecept.Ordinationer == null || nyRecept.Ordinationer.Count == 0)
+            {
+                throw new ArgumentException("En recept skal indeholde mindst én ordination.");
+            }
+
+            foreach (var ord in nyRecept.Ordinationer)
+            {
+                if (string.IsNullOrWhiteSpace(ord.Lægemiddel))
+                {
+                    throw new ArgumentException("Lægemiddelnavn må ikke være tomt.");
+                }
+
+                if (ord.AntalUdleveringer <= 0)
+                {
+                    throw new ArgumentException("Antal udleveringer skal være større end 0.");
+                }
+            }
+
             _repository.OpretRecept(nyRecept);
         }
         public Recept HentRecept(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Id skal være større end 0.");
+            }
             return _repository.HentRecept(id);
         }
 
         public void ForetagUdlevering(Ordination ordination)
         {
+            if (ordination == null)
+            {
+                throw new ArgumentNullException(nameof(ordination), "Ordinationen findes ikke.");
+            }
             if (ordination.ErFuldtUdleveret)
             {
                 throw new Exception("Der kan ikke foretages flere udleveringer på denne ordination, da den allerede er fuldt udleveret.");
@@ -62,6 +97,10 @@ namespace BLL
 
         public Lægehus HentLægehus(string ydernummer)
         {
+            if (string.IsNullOrWhiteSpace(ydernummer) || ydernummer.Length != 6)
+            {
+                throw new ArgumentException("Ydernummer skal være præcis 6 tegn.");
+            }
             return _repository.HentLægehus(ydernummer);
         }
     }
