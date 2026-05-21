@@ -29,19 +29,6 @@ namespace ApotekUI.Controllers
             return View(recepter);
         }
 
-        //henter data v. søgning
-        //[HttpPost]
-        //public IActionResult Index(string cprNummer)
-        //{
-        //    if (string.IsNullOrEmpty(cprNummer))
-        //    {
-        //        ViewBag.Fejl = "Du skal indtaste et CPR-nummer.";
-        //        return View(new List<Recept>());
-        //    }
-        //    var recepter = _manager.HentRecepterPåCpr(cprNummer);
-        //    return View(recepter);
-        //}
-
         //viser data for en specifik recept + udeleveringsmuligheder
         [HttpGet]
         public IActionResult Udlevering (int id)

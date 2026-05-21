@@ -1,12 +1,55 @@
 ﻿<Window x:Class="LægeUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LægeUI"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Lægesystem" Height="450" Width="800">
+    <Grid Margin="20">
+        <StackPanel x:Name="LoginPanel" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="Indtast Ydernummer for at logge ind:" Margin="0,0,0,10" />
+            <TextBox x:Name="YdernummerInput" Width="200" Margin="0,0,0,10"/>
+            <Button Content="Log ind" Width="100" Click="Login_Click" IsDefault="True"/>
+            <TextBlock x:Name="LoginFejlBesked" Foreground="Red" Margin="0,10,0,0" />
+        </StackPanel>
 
+        <StackPanel x:Name="ArbejdsPanel" Visibility="Collapsed">
+            <TextBlock x:Name="VelkomstTekst" FontSize="18" FontWeight="Bold" Margin="0,0,0,20" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Patient CPR:" FontWeight="Bold"/>
+                    <TextBox x:Name="CprInput" Margin="0,0,0,10" />
+
+                    <TextBlock Text="Lægemiddel (fx Pamol):" FontWeight="Bold"/>
+                    <TextBox x:Name="MedicinInput" Margin="0,0,0,10" />
+
+                    <TextBlock Text="Dosis (fx 2 stk dagligt):" FontWeight="Bold"/>
+                    <TextBox x:Name="DosisInput" Margin="0,0,0,10" />
+
+                    <TextBlock Text="Antal tilladte udleveringer:" FontWeight="Bold"/>
+                    <TextBox x:Name="UdleveringerInput" Margin="0,0,0,10" />
+
+                    <Button Content="Tilføj medicin til recept" Click="TilfoejMedicin_Click" Margin="0,10,0,20" Padding="5"/>
+                    <TextBlock x:Name="InputFejlBesked" Foreground="Red" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Valgt medicin på denne recept:" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <ListBox x:Name="MedicinListe" Height="150" Margin="0,0,0,10">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Lægemiddel}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Button Content="Godkend og Opret Recept" Click="OpretRecept_Click" Background="LightGreen" Padding="10" FontWeight="Bold"/>
+                    <TextBlock x:Name="OpretStatusBesked" Margin="0,10,0,0" FontWeight="Bold" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
     </Grid>
 </Window>

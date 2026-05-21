@@ -27,7 +27,7 @@
         <thead>
             <tr>
                 <th>Recept ID</th>
-                <th>Lægehus (Ydernummer)</th>
+                <th>Lægehus</th>
                 <th>Oprettet Dato</th>
                 <th>Handling</th>
             </tr>
@@ -37,7 +37,7 @@
             {
                 <tr>
                     <td>@recept.Id</td>
-                    <td>@recept.LægehusYdernummer</td>
+                    <td>@recept.LægehusYdernummer.Navn</td>
                     <td>@recept.OprettetDato.ToShortDateString()</td>
                     <td>
                         <a href="/Recept/Udlevering/@recept.Id" class="btn btn-sm btn-success">Se ordinationer</a>
